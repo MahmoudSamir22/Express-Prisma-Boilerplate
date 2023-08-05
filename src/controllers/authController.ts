@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import authService from "../services/authService";
 import response from "../utils/response";
 import signToken from "../utils/signToken";
+import sendMail from "../utils/sendMails";
 
 class AuthController {
     async signUpUser(req: Request, res: Response, next: NextFunction){
@@ -32,6 +33,34 @@ class AuthController {
         try {
             const user = await authService.signUp(req.body, req.body.role);
             response(res, 201, {status: true, message: "User created successfully!", data: user });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async forgetPassword(req: Request, res: Response, next: NextFunction){
+        try {
+            const user = await authService.forgetPassword(req.body.email);
+            sendMail({to: user.email, message: user.code})
+            response(res, 200, {status: true, message: "Reset Code Sent Successfully"});
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async verifyResetCode(req: Request, res: Response, next: NextFunction){
+        try {
+            await authService.verifyResetPasswordCode(req.body.email, req.body.code.toString());
+            response(res, 200, {status: true, message: "Code Verified Successfully"});
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async resetPassword(req: Request, res: Response, next: NextFunction){
+        try {
+            await authService.resetPassword(req.body.email, req.body.password);
+            response(res, 200, {status: true, message: "Password reset successfully"});
         } catch (error) {
             next(error);
         }

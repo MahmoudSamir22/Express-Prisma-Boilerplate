@@ -28,6 +28,7 @@ model User_Codes {
   verifyEmailCodeExpiresAt   DateTime?
   resetPasswordCode          String?
   resetPasswordCodeExpiresAt DateTime?
+  resetPasswordCodeVerified  Boolean   @default(false)
   userId                     Int       @unique
   User                       User      @relation(fields: [userId], references: [id])
 }
