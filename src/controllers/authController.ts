@@ -6,6 +6,9 @@ import signToken from "../utils/signToken";
 class AuthController {
     async signUpUser(req: Request, res: Response, next: NextFunction){
         try {
+            if(req.file){
+                req.body.avatar = req.file.path
+            }
             const user = await authService.signUp(req.body);
             response(res, 201, {status: true, message: "Account created successfully!", data: user });
         } catch (error) {
@@ -13,7 +16,7 @@ class AuthController {
         }
     }
 
-    async loginUser(req: Request, res: Response, next: NextFunction){
+    async login(req: Request, res: Response, next: NextFunction){
         try {
             const { email, password } = req.body;
             const user = await authService.login(email, password);
