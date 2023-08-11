@@ -1,5 +1,6 @@
 ![Node.js](https://img.shields.io/badge/Node.js-14.17.5-green?logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-4.4.4-blue?logo=typescript)
+![Prisma](https://img.shields.io/badge/Prisma-5.1.1-3b1f6d?logo=prisma&logoColor=white)
 # Quick Start Node.js Project with TypeScript and Prisma
 
 This repository provides a quick start template for setting up a Node.js project using TypeScript and Prisma as an ORM. It's designed to help you kickstart your development process with minimal configuration.
