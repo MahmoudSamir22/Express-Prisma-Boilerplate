@@ -11,6 +11,7 @@ Before you begin, ensure you have the following installed on your system:
 
 - Node.js (v14 or higher)
 - npm (Node Package Manager)
+- TypeScript
 
 ## Installation
 
