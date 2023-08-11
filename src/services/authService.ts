@@ -2,8 +2,7 @@ import prisma from "../../prisma/client";
 import { SignUpType } from "../types/authType";
 import bcrypt from "bcrypt";
 import ApiError from "../utils/ApiError";
-import generateOTP from "../utils/generateOTP";
-import crypto from "crypto";
+import generateOTP, { encrypt } from "../utils/generateOTP";
 
 class AuthService {
   async signUp(data: SignUpType, role?: string) {
@@ -64,12 +63,12 @@ class AuthService {
   }
 
   async verifyResetPasswordCode(email: string, code: string) {
-    const hashedOTP = crypto.createHash("sha256").update(code).digest("hex");
+    const hashedOTP = encrypt(code);
     const userCode = await prisma.user_Codes.findFirst({
         where: {
             resetPasswordCode: hashedOTP,
             resetPasswordCodeExpiresAt: {
-                gt: new Date()
+                gte: new Date()
             },
             User: {
                 email
@@ -84,10 +83,7 @@ class AuthService {
     async resetPassword(email: string, password: string) {
         await prisma.user.update({
             where: {
-                email,
-                User_Codes: {
-                    
-                }
+                email
             },
             data: {
                 password: await bcrypt.hash(password, 8)
