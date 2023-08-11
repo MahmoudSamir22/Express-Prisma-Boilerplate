@@ -15,22 +15,26 @@ Before you begin, ensure you have the following installed on your system:
 
    ```bash
    git clone https://github.com/MahmoudSamir22/NodeJs-Project-QuickStart.git
-   
+
+   ```
+
 2. Navigate to the project directory:
 
-  ```bash
-  cd NodeJs-Project-QuickStart
-  ```
+```bash
+cd NodeJs-Project-QuickStart
+```
+
 3. Install the project dependencies:
 
-  ```bash
-  npm install
-  ```
+```bash
+npm install
+```
+
 4. Copy the .env.example file and rename it to .env. Update the environment variables as needed:
 
-  ```bash
-  cp .env.example .env
-  ```
+```bash
+cp .env.example .env
+```
 
 ## Usage
 
@@ -51,7 +55,9 @@ To upgrade project dependencies, you can use the following command:
 ```bash
 npm update
 ```
+
 This will update all packages to their latest compatible versions.
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or want to enhance this template, feel free to submit a pull request.
@@ -60,4 +66,4 @@ Contributions are welcome! If you find any issues or want to enhance this templa
 
 This project is licensed under the [MIT License](LICENSE).
 
-Happy coding ^_^
+Happy coding ^\_^
