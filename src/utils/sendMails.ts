@@ -15,9 +15,7 @@ export default async (data: any) => {
   await transporter.sendMail({
     from: '"Fred Foo 👻" <foo@example.com>', // sender address
     to: data.to, // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: `${data.message}`, // plain text body
-    html: `<b>${data.message}</b>`, // html body
+    subject: data.subject, // Subject line
+    html: data.html, // html body
   });
-  
 };

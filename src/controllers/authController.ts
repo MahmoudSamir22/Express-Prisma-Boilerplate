@@ -3,6 +3,7 @@ import authService from "../services/authService";
 import response from "../utils/response";
 import signToken from "../utils/signToken";
 import sendMail from "../utils/sendMails";
+import pug from "pug";
 
 class AuthController {
     async signUpUser(req: Request, res: Response, next: NextFunction){
@@ -41,7 +42,8 @@ class AuthController {
     async forgetPassword(req: Request, res: Response, next: NextFunction){
         try {
             const user = await authService.forgetPassword(req.body.email);
-            sendMail({to: user.email, message: user.code})
+            const html = pug.renderFile(`${process.cwd()}/src/templates/forgetPassword.pug`, {code: user.code, username: user.username})
+            sendMail({to: user.email, html, subject: "Reset Password"})
             response(res, 200, {status: true, message: "Reset Code Sent Successfully"});
         } catch (error) {
             next(error);

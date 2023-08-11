@@ -59,7 +59,7 @@ class AuthService {
         userId: user.id,
       },
     });
-    return { email: user.email, code: codes.otp };
+    return { email: user.email, code: codes.otp, username: user.name };
   }
 
   async verifyResetPasswordCode(email: string, code: string) {
