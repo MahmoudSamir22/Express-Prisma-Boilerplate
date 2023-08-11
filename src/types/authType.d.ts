@@ -3,6 +3,7 @@ export type SignUpType = {
     email: string;
     password: string;
     avatar?: string;
+    role?: string;
 }
 
 export type LoginType = {

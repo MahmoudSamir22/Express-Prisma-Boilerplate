@@ -1,16 +1,25 @@
 import { Router } from "express";
 import authController from "../controllers/authController";
 import uploadToDiskStorage from "../middlewares/multer";
-
+import joiAsyncMiddleWare from "../middlewares/joiMiddleware";
+import {
+  registerValidationSchema,
+  loginValidationSchema,
+} from "../validations/authValidations";
 const router = Router();
 
 router.post(
   "/signup",
   uploadToDiskStorage.single("avatar"),
+  joiAsyncMiddleWare(registerValidationSchema),
   authController.signUpUser
 );
 
-router.post("/login", authController.login);
+router.post(
+  "/login",
+  joiAsyncMiddleWare(loginValidationSchema),
+  authController.login
+);
 
 router.post("/add-users", authController.addUsers);
 
