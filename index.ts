@@ -11,6 +11,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.use("/uploads", express.static("uploads"));
+app.use("/assets", express.static("assets"));
+
 app.use("/api", router);
 
 app.use(globalError);
