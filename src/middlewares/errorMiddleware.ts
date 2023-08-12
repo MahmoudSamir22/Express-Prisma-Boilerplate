@@ -1,16 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import ApiError from "../utils/ApiError";
 import response from "../utils/response";
-import removeFile from "../utils/fileHandler";
-
+import {removeFilesOnError} from "../utils/fileHandler";
 export default (err:ApiError, req:Request, res:Response, next:NextFunction) => {
-    if(req.file){
-        removeFile(req.file.path)
-    }
-    if(req.files){
-        (req.files as Express.Multer.File[]).forEach((file:Express.Multer.File) => {
-            removeFile(file.path)
-        })
+    if(req.file || req.files){
+        removeFilesOnError(req);
     }
     err.statusCode = err.statusCode || 500;
     if(process.env.NODE_ENV === "development"){
