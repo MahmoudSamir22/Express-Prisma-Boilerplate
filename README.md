@@ -19,7 +19,7 @@ Before you begin, ensure you have the following installed on your system:
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/MahmoudSamir22/NodeJs-Project-QuickStart.git
+   git clone https://github.com/MahmoudSamir22/Express-Prisma-Boilerplate.git
 
    ```
 
