@@ -40,6 +40,15 @@ npm install
 ```bash
 cp .env.example .env
 ```
+## Upgrade Packages
+
+To upgrade project dependencies, you can use the following command:
+
+```bash
+npm update
+```
+
+This will update all packages to their latest compatible versions.
 
 ## Usage
 
@@ -57,15 +66,6 @@ The project follows this directory structure:
 - `prisma/`: Contains Prisma schema and migration files.
 - `dist/`: Output directory for compiled TypeScript files.
 
-## Upgrade Packages
-
-To upgrade project dependencies, you can use the following command:
-
-```bash
-npm update
-```
-
-This will update all packages to their latest compatible versions.
 
 ## Contributing
 
