@@ -26,8 +26,6 @@ export const removeFilesOnError = (req: Request) => {
       //Handling multiple files (Multer.fields())
       for (const key in req.files) {
         const files = req.files[key];
-        console.log(files);
-
         files.forEach((file: Express.Multer.File) => {
           removeFile(file.path);
         });
