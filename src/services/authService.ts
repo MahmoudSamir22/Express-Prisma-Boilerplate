@@ -1,5 +1,5 @@
 import prisma from "../../prisma/client";
-import { ForgetPasswordReturn, LoginType, SignUpType } from "../types/authType";
+import { ChangePassword, ForgetPasswordReturn, LoginType, SignUpType } from "../types/authType";
 import bcrypt from "bcrypt";
 import ApiError from "../utils/ApiError";
 import generateOTP, { encrypt } from "../utils/generateOTP";
@@ -107,6 +107,29 @@ class AuthService implements IAuthService {
       },
       data: {
         password: await bcrypt.hash(password, 8),
+      },
+    });
+  }
+
+  async changePassword(userId: number, data: ChangePassword): Promise<void> {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId, // Replace with the actual user ID
+      },
+    });
+    if (!user) {
+      throw new ApiError("User not found", 404);
+    }
+    const passwordMatch = await bcrypt.compare(data.oldPassword, user.password);
+    if (!passwordMatch) {
+      throw new ApiError("Incorrect old password", 400);
+    }
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        password: await bcrypt.hash(data.newPassword, 8),
       },
     });
   }

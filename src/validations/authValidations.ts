@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { SignUpType, LoginType } from "../types/authType";
+import { SignUpType, LoginType, ChangePassword } from "../types/authType";
 import { Roles } from "../enum/roles";
 import prisma from "../../prisma/client";
 
@@ -27,4 +27,9 @@ export const registerValidationSchema = Joi.object<SignUpType>().keys({
 export const loginValidationSchema = Joi.object<LoginType>().keys({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
+});
+
+export const changePasswordValidationSchema = Joi.object<ChangePassword>().keys({
+  oldPassword: Joi.string().required(),
+  newPassword: Joi.string().required(),
 });

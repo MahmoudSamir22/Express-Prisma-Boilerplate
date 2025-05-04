@@ -4,6 +4,7 @@ import response from "../utils/response";
 import signToken from "../utils/signToken";
 import sendMail from "../utils/sendMails";
 import pug from "pug";
+import CustomRequest from "../interfaces/customRequest";
 
 class AuthController {
   async signUpUser(req: Request, res: Response, next: NextFunction) {
@@ -90,6 +91,19 @@ class AuthController {
       response(res, 200, {
         status: true,
         message: "Password reset successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async changePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { userId } = req as CustomRequest;
+      await authService.changePassword(userId, req.body);
+      response(res, 200, {
+        status: true,
+        message: "Password changed successfully",
       });
     } catch (error) {
       next(error);
