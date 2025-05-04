@@ -16,3 +16,8 @@ export type ForgetPasswordReturn = {
   code: number;
   username: string;
 };
+
+export type ChangePassword = {
+  oldPassword: string;
+  newPassword: string;
+}
