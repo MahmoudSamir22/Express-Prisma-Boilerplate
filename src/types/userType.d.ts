@@ -10,3 +10,5 @@ export default interface IUser {
 }
 
 export type UserProfile = Omit<IUser, "createdAt" | "updatedAt" | "password">;
+
+export type UpdateProfile = Pick<IUser, "name" | "email" | "avatar">;
