@@ -20,9 +20,7 @@ class AuthController {
 
     async login(req: Request, res: Response, next: NextFunction){
         try {
-            const { email, password } = req.body;
-            const user = await authService.login(email, password);
-            // delete user.password // remove password from the response
+            const user = await authService.login(req.body);
             const token = signToken({id: user.id})
             response(res, 200, {status: true, message: "Login successful!", data: {token, user} });
         } catch (error) {
