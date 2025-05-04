@@ -15,6 +15,9 @@ app.use("/uploads", express.static("uploads"));
 app.use("/assets", express.static("assets"));
 
 app.use("/api", router);
+app.all("*", (req, res, next) => {
+    res.status(404).json({status: false, message: `Endpoint not found: ${req.method} ${req.originalUrl}`});
+})
 
 app.use(globalError);
 
