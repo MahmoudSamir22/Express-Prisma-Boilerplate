@@ -1,7 +1,7 @@
 import { Router } from "express";
 import authController from "../controllers/authController";
 import uploadToDiskStorage from "../middlewares/multer";
-import joiAsyncMiddleWare from "../middlewares/joiMiddleware";
+import joiMiddleWare from "../middlewares/joiMiddleware";
 import {
   registerValidationSchema,
   loginValidationSchema,
@@ -13,13 +13,13 @@ const router = Router();
 router.post(
   "/signup",
   uploadToDiskStorage.single("avatar"),
-  joiAsyncMiddleWare(registerValidationSchema),
+  joiMiddleWare(registerValidationSchema),
   authController.signUpUser
 );
 
 router.post(
   "/login",
-  joiAsyncMiddleWare(loginValidationSchema),
+  joiMiddleWare(loginValidationSchema),
   authController.login
 );
 
@@ -34,7 +34,7 @@ router.post("/reset-password", authController.resetPassword);
 router.post(
   "/change-password",
   auth,
-  joiAsyncMiddleWare(changePasswordValidationSchema),
+  joiMiddleWare(changePasswordValidationSchema),
   authController.changePassword
 );
 

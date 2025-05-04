@@ -2,7 +2,7 @@ import { Router } from "express";
 import userController from "../controllers/userController";
 import auth from "../middlewares/auth";
 import uploadToDiskStorage from "../middlewares/multer";
-import joiAsyncMiddleWare from "../middlewares/joiMiddleware";
+import joiMiddleWare from "../middlewares/joiMiddleware";
 import { updateProfileSchema } from "../validations/userValidations";
 
 const router = Router();
@@ -13,7 +13,7 @@ router
   .patch(
     auth,
     uploadToDiskStorage.single("avatar"),
-    joiAsyncMiddleWare(updateProfileSchema),
+    joiMiddleWare(updateProfileSchema),
     userController.updateProfile
   );
 
