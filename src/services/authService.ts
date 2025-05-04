@@ -1,11 +1,13 @@
 import prisma from "../../prisma/client";
-import { SignUpType } from "../types/authType";
+import { ChangePassword, ForgetPasswordReturn, LoginType, SignUpType } from "../types/authType";
 import bcrypt from "bcrypt";
 import ApiError from "../utils/ApiError";
 import generateOTP, { encrypt } from "../utils/generateOTP";
+import IAuthService from "../interfaces/auth.service";
+import { UserProfile } from "../types/userType";
 
-class AuthService {
-  async signUp(data: SignUpType, role?: string) {
+class AuthService implements IAuthService {
+  async signUp(data: SignUpType, role?: string): Promise<UserProfile> {
     const { name, email, password, avatar } = data;
     const user = await prisma.user.create({
       data: {
@@ -15,27 +17,45 @@ class AuthService {
         avatar,
         role,
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+        role: true,
+        avatar: true,
+      }
     });
-    return user;
+    const { password: _, ...profile } = user;
+    return profile;
   }
 
-  async login(email: string, password: string) {
+  async login(data: LoginType): Promise<UserProfile> {
     const user = await prisma.user.findUnique({
       where: {
-        email,
+        email: data.email,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+        role: true,
+        avatar: true,
       },
     });
     if (!user) {
       throw new ApiError("Incorrect Email or password", 400);
     }
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const { password, ...profile } = user;
+    const passwordMatch = await bcrypt.compare(data.password, password);
     if (!passwordMatch) {
       throw new ApiError("Incorrect Email or password", 400);
     }
-    return user;
+    return profile;
   }
 
-  async forgetPassword(email: string) {
+  async forgetPassword(email: string): Promise<ForgetPasswordReturn> {
     const user = await prisma.user.findUnique({
       where: {
         email,
@@ -62,34 +82,57 @@ class AuthService {
     return { email: user.email, code: codes.otp, username: user.name };
   }
 
-  async verifyResetPasswordCode(email: string, code: string) {
+  async verifyResetPasswordCode(email: string, code: string): Promise<void> {
     const hashedOTP = encrypt(code);
     const userCode = await prisma.user_Codes.findFirst({
-        where: {
-            resetPasswordCode: hashedOTP,
-            resetPasswordCodeExpiresAt: {
-                gte: new Date()
-            },
-            User: {
-                email
-            }
-        }
-    })
-    if(!userCode){
-        throw new ApiError("Code is Invalid Or Expired", 400)
+      where: {
+        resetPasswordCode: hashedOTP,
+        resetPasswordCodeExpiresAt: {
+          gte: new Date(),
+        },
+        User: {
+          email,
+        },
+      },
+    });
+    if (!userCode) {
+      throw new ApiError("Code is Invalid Or Expired", 400);
     }
   }
 
-    async resetPassword(email: string, password: string) {
-        await prisma.user.update({
-            where: {
-                email
-            },
-            data: {
-                password: await bcrypt.hash(password, 8)
-            }
-        })
+  async resetPassword(email: string, password: string): Promise<void> {
+    await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        password: await bcrypt.hash(password, 8),
+      },
+    });
+  }
+
+  async changePassword(userId: number, data: ChangePassword): Promise<void> {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId, // Replace with the actual user ID
+      },
+    });
+    if (!user) {
+      throw new ApiError("User not found", 404);
     }
+    const passwordMatch = await bcrypt.compare(data.oldPassword, user.password);
+    if (!passwordMatch) {
+      throw new ApiError("Incorrect old password", 400);
+    }
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        password: await bcrypt.hash(data.newPassword, 8),
+      },
+    });
+  }
 }
 
 const authService = new AuthService();

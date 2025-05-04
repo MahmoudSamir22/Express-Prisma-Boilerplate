@@ -1,16 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
+import response from "../utils/response";
 
-function joiAsyncMiddleWare(schema: Joi.ObjectSchema<any>) {
+function joiMiddleWare(schema: Joi.ObjectSchema<any>) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { error, value } = await schema.validateAsync(req.body, {
+      const { error, value } = schema.validate(req.body, {
         abortEarly: false,
       });
 
       if (error) {
         const validationErrors = error.details.map((detail:any) => detail.message);
-        return res.status(400).json({ errors: validationErrors });
+        return response(res, 400, { status: false, message: validationErrors[0] });
       }
       
       next();
@@ -20,4 +21,4 @@ function joiAsyncMiddleWare(schema: Joi.ObjectSchema<any>) {
   };
 }
 
-export default joiAsyncMiddleWare;
+export default joiMiddleWare;

@@ -1,23 +1,25 @@
 import { Router } from "express";
 import authController from "../controllers/authController";
 import uploadToDiskStorage from "../middlewares/multer";
-import joiAsyncMiddleWare from "../middlewares/joiMiddleware";
+import joiMiddleWare from "../middlewares/joiMiddleware";
 import {
   registerValidationSchema,
   loginValidationSchema,
+  changePasswordValidationSchema,
 } from "../validations/authValidations";
+import auth from "../middlewares/auth";
 const router = Router();
 
 router.post(
   "/signup",
   uploadToDiskStorage.single("avatar"),
-  joiAsyncMiddleWare(registerValidationSchema),
+  joiMiddleWare(registerValidationSchema),
   authController.signUpUser
 );
 
 router.post(
   "/login",
-  joiAsyncMiddleWare(loginValidationSchema),
+  joiMiddleWare(loginValidationSchema),
   authController.login
 );
 
@@ -28,5 +30,12 @@ router.post("/forget-password", authController.forgetPassword);
 router.post("/verify-reset-code", authController.verifyResetCode);
 
 router.post("/reset-password", authController.resetPassword);
+
+router.post(
+  "/change-password",
+  auth,
+  joiMiddleWare(changePasswordValidationSchema),
+  authController.changePassword
+);
 
 export default router;

@@ -13,7 +13,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if (!token) {
       return next(new ApiError("No Token Provided", 401));
     }
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY!);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET_ACCESS!);
     const user = await prisma.user.findUnique({
       where: {
         id: decoded.id,
@@ -26,7 +26,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if (!user) {
       return next(new ApiError("Unauthorized", 401));
     }
-    (req as CustomRequest).user = user.id;
+    (req as CustomRequest).userId = user.id;
     (req as CustomRequest).role = user.role;
     next();
   } catch (error) {
